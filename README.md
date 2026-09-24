@@ -21,13 +21,13 @@ My goal is to complete the Bandit challenges while developing stronger technical
 
 ## Contents
 
-- [Linux Cheat Sheet](linux-cheat-sheet.md)
-- [Level 00](level-00.md)
-- [Level 0 to Level 1](level-01.md)
-- [Level 1 to Level 2](level-02.md)
-- [Level 2 to Level 3](level-03.md)
-- [Level 3 to Level 4](level-04.md)
-- [Level 4 to Level 5](level-05.md)
+- [Linux Cheat Sheet](bandit/linux-cheat-sheet.md)
+- [Level 00](bandit/level-00.md)
+- [Level 0 to Level 1](bandit/level-01.md)
+- [Level 1 to Level 2](bandit/level-02.md)
+- [Level 2 to Level 3](bandit/level-03.md)
+- [Level 3 to Level 4](bandit/level-04.md)
+- [Level 4 to Level 5](bandit/level-05.md)
 
 Additional level notes can be added as the walkthrough progresses.
 
@@ -53,7 +53,7 @@ Replace `<level>` with the user for the challenge you are working on. SSH will p
 
 ## Keeping Credentials Private
 
-Passwords are intentionally not included in the walkthroughs. Local credentials are kept in `passwords.md`, which is ignored by Git and must never be committed or published.
+Passwords are intentionally not included in the walkthroughs. Local credentials are kept in `bandit/passwords.md`, which is ignored by Git and must never be committed or published.
 
 Before pushing changes, review the files that will be committed:
 
