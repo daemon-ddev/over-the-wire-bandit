@@ -1,98 +1,102 @@
-# My Linux Cheat Sheet
+# Linux Notes I Keep Nearby
 
-I use this cheat sheet when I get stuck in the Linux terminal. I replace anything in `<angle brackets>` with my own value. Anything in `[square brackets]` is optional.
+I use these notes when I am working in a Linux terminal, especially during the Bandit challenges. The commands are examples, so I replace anything in `<angle brackets>` with my own value. Text in `[square brackets]` means that part can be left out.
 
-## My Method
+## How I Work Through a Problem
 
-When I get a new problem, I:
+I try not to guess at commands. My usual process is:
 
-1. Read the whole problem and write down every clue.
-2. Choose the command that matches the problem.
-3. Fill in the command with my own values.
-4. Check the output.
-5. Adjust the command and try again if needed.
+1. Read the goal twice and write down every clue.
+2. Decide what kind of information I need: a filename, text, a file type, permissions, or a network connection.
+3. Choose the smallest command that can answer that question.
+4. Replace the placeholders with the values from the problem.
+5. Read the output before changing anything.
+6. If the result is not useful, check the command help and try one small adjustment.
 
-## Which Command Should I Use?
+## Quick Command Finder
 
-| I want to... | I use... |
+When I know what I am trying to do, this is the command I check first:
+
+| What I am trying to do | Command I start with |
 | --- | --- |
 | See hidden files | `ls -a` |
-| Find a file by name, size, or owner | `find` |
-| Find text inside a file | `grep` |
-| Find a line that appears only once | `sort` and then `uniq -u` |
+| Find a file using clues such as its name, size, or owner | `find` |
+| Look for text inside a file | `grep` |
+| Find a line that appears only once | `sort` then `uniq -u` |
 | Pull readable text from a binary file | `strings` |
-| Check what kind of file I have | `file` |
-| Decode Base64 text | `base64 -d` |
-| Replace letters or characters | `tr` |
-| Unpack a compressed file | `gzip -d`, `bzip2 -d`, or `tar xf` |
-| Log in with an SSH key | `ssh -i` |
-| Connect to a network port | `nc` |
+| Identify a file | `file` |
+| Decode Base64 | `base64 -d` |
+| Replace characters or change their case | `tr` |
+| Unpack compressed data | `gzip -d`, `bzip2 -d`, or `tar xf` |
+| Log in with a private key | `ssh -i` |
+| Send data to a network port | `nc` |
 
-## Moving Around and Reading Files
+## First Things I Check
 
-| I want to... | Pattern | Example |
+These are the commands I reach for when I first arrive in a directory:
+
+| What I need to know | Command | Example |
 | --- | --- | --- |
-| Enter a folder | `cd <folder>` | `cd projects` |
-| Go up one folder | `cd ..` | `cd ..` |
-| Go to my home folder | `cd ~` | `cd ~` |
-| See my current location | `pwd` | `pwd` |
-| List files | `ls [options] [folder]` | `ls -la projects` |
-| Show hidden files | `ls -a` | `ls -a` |
-| Read a file | `cat <file>` | `cat notes.txt` |
-| Read a file with a strange name | `cat "./<file>"` | `cat "./-notes"` |
-| Read the first lines of a file | `head -n <number> <file>` | `head -n 5 notes.txt` |
-| Check a file type | `file <file>` | `file notes.txt` |
+| Where I am | `pwd` | `pwd` |
+| What is here | `ls [options] [folder]` | `ls -la projects` |
+| Whether hidden files are present | `ls -a` | `ls -a` |
+| The contents of a file | `cat <file>` | `cat notes.txt` |
+| The first few lines | `head -n <number> <file>` | `head -n 5 notes.txt` |
+| What kind of file it is | `file <file>` | `file notes.txt` |
 
-## Creating and Managing Files
+If a filename starts with a dash, I make its path explicit so the command does not treat the name as an option:
 
-| I want to... | Pattern | Example |
+```bash
+cat "./-notes"
+```
+
+## Moving Around
+
+```bash
+cd <folder>     # enter a folder
+cd ..           # go up one folder
+cd ~            # go to my home folder
+```
+
+## Working with Files and Folders
+
+| Task | Command | Example |
 | --- | --- | --- |
 | Create a folder | `mkdir <name>` | `mkdir backup` |
 | Create a private temporary folder | `mktemp -d` | `mktemp -d` |
 | Copy a file | `cp <source> <destination>` | `cp notes.txt backup/` |
-| Rename or move a file | `mv <old> <new>` | `mv notes.txt old-notes.txt` |
-| Change file permissions | `chmod <mode> <file>` | `chmod 600 mykey` |
+| Move or rename a file | `mv <old> <new>` | `mv notes.txt old-notes.txt` |
+| Change permissions | `chmod <mode> <file>` | `chmod 600 mykey` |
 
-## Searching with `find`
+## Finding a File
 
-I use this pattern when I need to search through a directory:
+I use `find` when the problem gives me clues about a file's name, size, owner, group, or permissions.
 
 ```bash
-find <where to start> [filters] 2>/dev/null
+find <starting-place> [filters] 2>/dev/null
 ```
 
-`2>/dev/null` hides error messages, such as permission errors, so I can see the useful results more easily.
+Useful starting places:
 
-### Starting Location
+- `.` searches from my current directory.
+- `/` searches the whole server.
+- `<path>` searches one specific folder.
 
-| Location | Meaning |
-| --- | --- |
-| `.` | Start in the current folder |
-| `/` | Search the whole server |
-| `<path>` | Start in a specific folder |
+Useful filters:
 
-### Common Filters
+```bash
+-name "<name>"          # match a name, such as "*.log"
+-type f                 # files only
+-type d                 # folders only
+-size <number><unit>    # exact size
+-size +<number><unit>   # larger than a size
+-size -<number><unit>   # smaller than a size
+-user <user>            # owned by a user
+-group <group>          # owned by a group
+! -executable           # not executable
+```
 
-| I want to find... | Pattern | Example |
-| --- | --- | --- |
-| A name | `-name "<name>"` | `-name "*.log"` |
-| Files only | `-type f` | `-type f` |
-| Folders only | `-type d` | `-type d` |
-| An exact size | `-size <number><unit>` | `-size 1000c` |
-| Something bigger than a size | `-size +<number><unit>` | `-size +5M` |
-| Something smaller than a size | `-size -<number><unit>` | `-size -5M` |
-| A specific owner | `-user <user>` | `-user alex` |
-| A specific group | `-group <group>` | `-group staff` |
-| A file that is not executable | `! -executable` | `! -executable` |
-
-### Size Units
-
-- `c` means bytes.
-- `k` means kilobytes.
-- `M` means megabytes.
-- `G` means gigabytes.
-
-There is no space between the number and the unit.
+The size units are `c` for bytes, `k` for kilobytes, `M` for megabytes, and `G` for gigabytes. I do not put a space between the number and the unit.
 
 For example:
 
@@ -100,108 +104,117 @@ For example:
 find / -type f -user alex -size 1000c 2>/dev/null
 ```
 
-## Searching with `grep`
+## Finding Text
 
-| I want to... | Pattern | Example |
-| --- | --- | --- |
-| Show lines containing text | `grep "<pattern>" <file>` | `grep "error" app.log` |
-| Ignore uppercase and lowercase differences | `grep -i "<pattern>" <file>` | `grep -i "error" app.log` |
-| Show line numbers | `grep -n "<pattern>" <file>` | `grep -n "error" app.log` |
-| Show lines that do not match | `grep -v "<pattern>" <file>` | `grep -v "error" app.log` |
-| Count matching lines | `grep -c "<pattern>" <file>` | `grep -c "error" app.log` |
-| Show lines after a match | `grep -A <number> "<pattern>" <file>` | `grep -A 2 "error" app.log` |
-| Search through a whole folder | `grep -r "<pattern>" <folder>` | `grep -r "error" logs/` |
+I use `grep` when I know what text I am looking for:
 
-## Pipes and Redirection
+```bash
+grep "<pattern>" <file>                    # matching lines
+grep -i "<pattern>" <file>                 # ignore case
+grep -n "<pattern>" <file>                 # include line numbers
+grep -v "<pattern>" <file>                 # lines without a match
+grep -c "<pattern>" <file>                 # count matching lines
+grep -A <number> "<pattern>" <file>        # lines after a match
+grep -r "<pattern>" <folder>               # search a folder
+```
 
-A pipe sends the output from one command into another command:
+Other commands help when the clue is about the contents rather than an exact word:
+
+```bash
+strings <file> | grep "<pattern>"          # readable text from a binary
+sort <file> | uniq -u                       # lines that appear once
+sort <file> | uniq -d                       # lines that repeat
+sort <file> | uniq -c                       # count each line
+```
+
+`uniq` only compares neighbouring lines, so I sort the input first. That puts matching lines beside each other.
+
+## Passing Output Between Commands
+
+The `|` symbol sends one command's output into the next command:
 
 ```bash
 <command 1> | <command 2>
 ```
 
-I use redirection to save output or provide input:
+I use redirection when I want to save output or use a file as input:
 
 ```bash
-<command> > <file>              # save output and overwrite the file
-<command> >> <file>             # add output to the end of the file
-<command> < <file>              # use a file as the command's input
-<command> 2>/dev/null           # hide error messages
+<command> > <file>       # write output and replace the file
+<command> >> <file>      # add output to the end of the file
+<command> < <file>       # read input from the file
+<command> 2>/dev/null    # hide error messages
 ```
 
-### Useful Command Chains
+For example, `history | grep "<pattern>"` searches my previous commands.
+
+## Decoding or Unpacking Something
+
+Before I choose an unpacking command, I run `file <name>`. The file type tells me what to try next.
+
+| What I found | Command | Example |
+| --- | --- | --- |
+| Base64 text | `base64 -d <file>` | `base64 -d message.txt` |
+| Characters that need replacing | `tr '<from>' '<to>' < <file>` | `tr 'a-z' 'A-Z' < notes.txt` |
+| ROT13 text | `tr 'A-Za-z' 'N-ZA-Mn-za-m' < <file>` | `tr 'A-Za-z' 'N-ZA-Mn-za-m' < message.txt` |
+| A hexdump | `xxd -r <file> > <output>` | `xxd -r dump.txt > data.bin` |
+| Gzip data | `gzip -d <file>.gz` | `gzip -d data.gz` |
+| Bzip2 data | `bzip2 -d <file>.bz2` | `bzip2 -d data.bz2` |
+| A tar archive | `tar xf <file>.tar` | `tar xf data.tar` |
+
+For a file compressed several times, I repeat this loop:
+
+1. Run `file <name>`.
+2. If necessary, rename the file so it ends in `.gz` or `.bz2`. Tar does not need that rename.
+3. Use the command that matches the file type.
+4. Run `file` on the new result and repeat.
+5. Stop when the result is reported as `ASCII text`.
+
+## Connecting to Another Machine
+
+For Bandit, the basic SSH shape is:
 
 ```bash
-sort <file> | uniq -u
-sort <file> | uniq -d
-sort <file> | uniq -c
-strings <file> | grep "<pattern>"
-history | grep "<pattern>"
+ssh <user>@<host> -p <port>
 ```
 
-`uniq` only compares lines next to each other, so I use `sort` first when I want reliable results.
+Other connection commands I want to remember:
 
-- `uniq -u` shows lines that appear once.
-- `uniq -d` shows lines that are repeated.
-- `uniq -c` counts how often each line appears.
+```bash
+ssh -i <keyfile> <user>@<host> -p <port>       # use a key
+scp -P <port> <user>@<host>:<remote file> .    # copy a remote file here
+nc <host> <port>                                # send data to a port
+nc -vz <host> <port>                            # check a port
+ping -c <count> <host>                          # test a connection
+dig +short <host>                               # look up an address
+```
 
-## Decoding and Unpacking Files
+Things that are easy to mix up:
 
-| I want to... | Pattern | Example |
-| --- | --- | --- |
-| Decode Base64 | `base64 -d <file>` | `base64 -d message.txt` |
-| Replace characters | `tr '<from>' '<to>' < <file>` | `tr 'a-z' 'A-Z' < notes.txt` |
-| Apply ROT13 | `tr 'A-Za-z' 'N-ZA-Mn-za-m' < <file>` | `tr 'A-Za-z' 'N-ZA-Mn-za-m' < message.txt` |
-| Turn a hexdump back into binary | `xxd -r <file> > <output>` | `xxd -r dump.txt > data.bin` |
-| Unpack gzip | `gzip -d <file>.gz` | `gzip -d data.gz` |
-| Unpack bzip2 | `bzip2 -d <file>.bz2` | `bzip2 -d data.bz2` |
-| Unpack tar | `tar xf <file>.tar` | `tar xf data.tar` |
+- SSH uses lowercase `-p` for its port.
+- SCP uses uppercase `-P` for its port.
+- A private key may need `chmod 600 <keyfile>` before SSH will accept it.
+- `nc` is not a shell. What I type is sent as data to the port.
 
-### Repeated Compression
+## Shortcuts I Use
 
-When a file has been compressed several times, I repeat these steps:
-
-1. Run `file <name>` to see what type of file it is.
-2. Rename it to end in `.gz` or `.bz2` if that tool needs the extension. `tar` does not need a renamed extension.
-3. Unpack it with the matching command.
-4. Run `file` on the result and repeat until it says `ASCII text`.
-
-## Remote Connections and Networking
-
-| I want to... | Pattern | Example |
-| --- | --- | --- |
-| Log in to a server | `ssh <user>@<host> -p <port>` | `ssh alex@server.example.com -p 22` |
-| Log in with a key | `ssh -i <keyfile> <user>@<host> -p <port>` | `ssh -i mykey alex@server.example.com -p 22` |
-| Copy a file from a server | `scp -P <port> <user>@<host>:<remote file> <destination>` | `scp -P 22 alex@server.example.com:notes.txt .` |
-| Connect to a port | `nc <host> <port>` | `nc localhost 8080` |
-| Check whether a port is open | `nc -vz <host> <port>` | `nc -vz server.example.com 22` |
-| Test a connection | `ping -c <count> <host>` | `ping -c 3 server.example.com` |
-| Look up a DNS address | `dig +short <host>` | `dig +short server.example.com` |
-
-### Things I Need to Remember
-
-- `ssh` uses lowercase `-p` for the port.
-- `scp` uses uppercase `-P` for the port.
-- SSH keys usually need `chmod 600 <keyfile>` or SSH may refuse to use them.
-- `nc` is not a shell. Anything I type is sent as data to the port.
-
-## Terminal Shortcuts
-
-| I want to... | I use... |
+| What I want to do | Shortcut or command |
 | --- | --- |
-| See past commands | `history` |
-| Run a past command by number | `!<number>` |
-| Repeat the last command | `!!` |
-| Search through past commands | Press `Ctrl+R`, then press it again for older matches |
-| Edit a command I found before running it | `Ctrl+J` |
-| Complete a name automatically | `Tab` |
-| Stop a command that is running | `Ctrl+C` |
+| See previous commands | `history` |
+| Run a command by its history number | `!<number>` |
+| Repeat the previous command | `!!` |
+| Search command history | Press `Ctrl+R`; press it again for older matches |
+| Edit a found command before running it | `Ctrl+J` |
+| Complete a filename or command | `Tab` |
+| Stop a running command | `Ctrl+C` |
 
-## When I Get Stuck
+## When I Need Help
 
-| I want to... | I use... | What it does |
-| --- | --- | --- |
-| Read the full manual | `man <command>` | Opens the manual for a command. Press `/` to search and `q` to quit. |
-| Get a quick summary | `<command> --help` | Shows the command's available options. |
+```bash
+man <command>       # open the full manual
+<command> --help    # see a shorter list of options
+```
 
-When I am stuck, I go back to the clues in the problem, check the file type, read the command help, and test one small step at a time.
+Inside a manual, I press `/`, type a word, and press Enter to search. I press `q` to quit.
+
+When I get stuck, I go back to the original clues, check the file type, read the command help, and test one small step at a time.
