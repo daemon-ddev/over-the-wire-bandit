@@ -1,8 +1,8 @@
 # My OverTheWire Bandit Journey
 
-This repository documents my journey through the [OverTheWire Bandit](https://overthewire.org/wargames/bandit/) technical learning game.
+This repository documents my journey through the [OverTheWire Bandit](https://overthewire.org/wargames/bandit/) command-line learning game.
 
-I am using Bandit to build a stronger foundation in Linux, the command line, SSH, and practical technical learning. Each challenge gives me a chance to slow down, understand what is happening, and develop better habits instead of only looking for a quick answer.
+I am using Bandit to build a stronger foundation in Linux, the command line, SSH, and practical problem solving. Each challenge gives me a chance to slow down, understand what is happening, and develop better habits instead of only looking for a quick answer.
 
 These notes capture the commands I used, the ideas behind them, what I did, and what I learned. They are also a record of my progress and a reference I can return to when I need to reinforce a concept.
 
@@ -17,7 +17,7 @@ These notes capture the commands I used, the ideas behind them, what I did, and 
 
 ## What I Am Trying to Accomplish
 
-My goal is to complete the Bandit challenges while developing skills that support a broader path into technical learning. I want to become comfortable exploring unfamiliar systems, using documentation, solving problems methodically, and keeping useful technical notes along the way.
+My goal is to complete the Bandit challenges while developing stronger technical and problem-solving skills. I want to become comfortable exploring unfamiliar systems, using documentation, solving problems methodically, and keeping useful technical notes along the way.
 
 ## Contents
 
