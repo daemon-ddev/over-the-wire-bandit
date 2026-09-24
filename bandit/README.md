@@ -21,6 +21,7 @@ My goal is to complete the Bandit challenges while developing stronger technical
 
 ## Contents
 
+- [Linux Cheat Sheet](linux-cheat-sheet.md)
 - [Level 00](level-00.md)
 - [Level 0 to Level 1](level-01.md)
 - [Level 1 to Level 2](level-02.md)
